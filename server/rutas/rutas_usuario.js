@@ -4,12 +4,14 @@ const bodyParser = require('body-parser');
 const Usuario = require('../../modelos/usuario');
 const bcrypt = require('bcryptjs');
 const _ = require('underscore');
+const { verificaToken, verificaAdmin } = require('../middlewares/autenticacion');
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/usuarios', (req, res) => {
+app.get('/usuarios', [verificaToken, verificaAdmin], (req, res) => {
+
 
     let since = req.query.since || 0;
     since = Number(since);
@@ -40,9 +42,11 @@ app.get('/usuarios', (req, res) => {
         });
 
 
+
+
 });
 
-app.post('/usuarios', (req, res) => {
+app.post('/usuarios', [verificaToken, verificaAdmin], (req, res) => {
 
     let body = req.body;
 
@@ -73,7 +77,8 @@ app.post('/usuarios', (req, res) => {
 
 });
 
-app.put('/usuarios/:id', (req, res) => {
+
+app.put('/usuarios/:id', [verificaToken, verificaAdmin], (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'password', 'img', 'estado']);
@@ -102,7 +107,7 @@ app.put('/usuarios/:id', (req, res) => {
 
 });
 
-app.delete('/usuarios/:id', (req, res) => {
+app.delete('/usuarios/:id', [verificaToken, verificaAdmin], (req, res) => {
 
     let id = req.params.id;
 

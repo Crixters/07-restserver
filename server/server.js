@@ -3,15 +3,17 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('./config/config');
-app.use(require('./rutas/rutas_usuario'));
+
+
+app.use(require('./rutas/index'));
 
 
 app.use(express.static(__dirname + '/app'));
 
 
 
-mongoose.connect('mongodb+srv://Crixters:shushubana21@cluster0-qtkcn.mongodb.net/BeCell', { useNewUrlParser: true, useCreateIndex: true }, (err) => {
-    if (err) throw err;
+mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true }, (err) => {
+    if (err) throw 'No se pudo conectar con la base de datos';
     return console.log('base de datos online');
 });
 
